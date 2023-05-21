@@ -1,0 +1,12 @@
+#!/bin/sh
+set -e
+
+if [ $# -eq 0 ] || { [ $# -eq 1 ] && { [ "$1" = "--help" ] || [ "$1" = "-h" ]; }; }; then
+  cat <<USAGE >&2
+Usage: $(basename "$0") [.nb file]
+USAGE
+  exit 1
+fi
+
+export LUA_INIT="@src/setup.lua"
+lua src/main.lua < "$1"
