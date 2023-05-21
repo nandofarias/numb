@@ -7,5 +7,5 @@ local ast = parser.parse(input)
 local code = compiler.compile(ast)
 local mem = {}
 local stack = {}
-interpreter.run(code, mem, stack, 0)
-print("result: " .. stack[1])
+local result = interpreter.run(code, mem, stack, 0)
+print("result: " .. result)

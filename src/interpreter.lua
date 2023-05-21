@@ -1,5 +1,3 @@
-local inspect = require("inspect")
-
 local M = {}
 
 local function deepcopy(table)
@@ -11,7 +9,22 @@ local function deepcopy(table)
   return copy
 end
 
-function M.run(code, mem, stack, top)
+local function inspect(value)
+  local type = type(value)
+  if type == "number" then
+    return value
+  elseif type == "table" then
+    local result = "["
+    for i = 1, #value do
+      local separator = i == #value and "" or ", "
+      result = result .. inspect(value[i]) .. separator
+    end
+    return result .. "]"
+  end
+end
+
+
+local function run(code, mem, stack, top)
   local pc = 1
   local base = top
   while true do
@@ -21,7 +34,7 @@ function M.run(code, mem, stack, top)
       return top - n
     elseif code[pc] == "call" then
       pc = pc + 1
-      top = M.run(code[pc], mem, stack, top)
+      top = run(code[pc], mem, stack, top)
     elseif code[pc] == "push" then
       pc = pc + 1
       top = top + 1
@@ -65,7 +78,7 @@ function M.run(code, mem, stack, top)
     elseif code[pc] == "gt" then
       stack[top - 1] = stack[top - 1] > stack[top] and 1 or 0
       top = top - 1
-    elseif code[pc] == "neg" then
+    elseif code[pc] == "not" then
       stack[top] = stack[top] == 0 and 1 or 0
     elseif code[pc] == "load" then
       pc = pc + 1
@@ -88,7 +101,7 @@ function M.run(code, mem, stack, top)
       stack[base + id] = stack[top]
       top = top - 1
     elseif code[pc] == "print" then
-      print(inspect(stack[top]))
+      M.print(inspect(stack[top]))
       top = top - 1
     elseif code[pc] == "jmp" then
       pc = pc + 1
@@ -147,6 +160,15 @@ function M.run(code, mem, stack, top)
     end
     pc = pc + 1
   end
+end
+
+M.print = function(value)
+  print(value)
+end
+
+M.run = function(code, mem, stack, top)
+  run(code, mem, stack, top)
+  return stack[1]
 end
 
 return M

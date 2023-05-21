@@ -126,9 +126,9 @@ function M.compile(tree)
       self:addCode(tonumber(ast.sign .. "1"))
       self:codeExp(ast.exp)
       self:addCode("mul")
-    elseif ast.tag == "neg" then
+    elseif ast.tag == "not" then
       self:codeExp(ast.exp)
-      self:addCode("neg")
+      self:addCode("not")
     else
       error("Invalid tree")
     end

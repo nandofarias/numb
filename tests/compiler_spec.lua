@@ -773,7 +773,7 @@ describe("compile", function()
     it("should compile not expressions", function()
       local result = compiler.compile({ {
         block = {
-          body = { tag = "neg", exp = { tag = "number", val = 2 } },
+          body = { tag = "not", exp = { tag = "number", val = 2 } },
           tag = "block"
         },
         name = "main",
@@ -783,7 +783,7 @@ describe("compile", function()
 
       assert.are.same(
         result,
-        { "push", 2, "neg", "push", 0, "ret", 0 }
+        { "push", 2, "not", "push", 0, "ret", 0 }
       )
     end)
 

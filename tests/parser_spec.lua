@@ -77,8 +77,11 @@ describe("parse", function()
       assert.are.same(result[2].block.body.st1,
         { tag = "call", fname = "foo", args = { { tag = "number", val = 1 }, { tag = "number", val = 2 } } })
       assert.are.same(result[2].block.body.st2,
-        { tag = "call", fname = "foo",
-          args = { { tag = "number", val = 1 }, { tag = "number", val = 2 }, { tag = "number", val = 3 } } })
+        {
+          tag = "call",
+          fname = "foo",
+          args = { { tag = "number", val = 1 }, { tag = "number", val = 2 }, { tag = "number", val = 3 } }
+        })
     end)
   end)
 
@@ -295,10 +298,10 @@ describe("parse", function()
         })
     end)
 
-    it("should parse negation expresssions", function()
+    it("should parse not expresssions", function()
       local result = parser.parse([[ function foo { return !2 } ]])
       assert.are.same(result[1].block.body.exp,
-        { tag = "neg", exp = { tag = "number", val = 2 } })
+        { tag = "not", exp = { tag = "number", val = 2 } })
     end)
 
     it("comparison should take precedence over logical expressions", function()
@@ -406,13 +409,13 @@ describe("parse", function()
         })
     end)
 
-    it("negation should take precedence over exponential expressions", function()
+    it("not expressions should take precedence over exponential expressions", function()
       local result = parser.parse([[ function foo { return !1 ^ 2 } ]])
       assert.are.same(result[1].block.body.exp,
         {
           tag = "binop",
           op = "^",
-          e1 = { tag = "neg", exp = { tag = "number", val = 1 } },
+          e1 = { tag = "not", exp = { tag = "number", val = 1 } },
           e2 = { tag = "number", val = 2 },
         })
     end)
@@ -421,7 +424,7 @@ describe("parse", function()
       local result = parser.parse([[ function foo { return !(1 ^ 2) } ]])
       assert.are.same(result[1].block.body.exp,
         {
-          tag = "neg",
+          tag = "not",
           exp = {
             tag = "binop",
             op = "^",
