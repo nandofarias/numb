@@ -11,9 +11,7 @@ description = {
   license = "MIT"
 }
 dependencies = {
-  "lua ~> 5.4"
-}
-test_dependencies = {
+  "lua ~> 5.4",
   "busted ~> 2.1"
 }
 build = {

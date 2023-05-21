@@ -132,13 +132,14 @@ local args = lpeg.V("args")
 
 local grammar = lpeg.P({
   "prog",
-  prog = space * lpeg.Ct(funcDec ^ 1) * -1,
+  prog = space * lpeg.Ct(funcDec ^ 0) * -1,
   funcDec = Rw "function" * ID * lpeg.Ct((T "(" * params * T ")") ^ -1) * block ^ -1 * T ";" ^ -1 /
       node("function", "name", "params", "block"),
-  params = (defaultParam + (ID * (T "," * params))) ^ -1,
+  params = (defaultParam + (ID * (T "," * params) ^ -1)) ^ -1,
   defaultParam = ID * T "=" * exp / node("defaultParam", "name", "exp"),
+  block = T "{" * stats * T ";" ^ -1 * T "}" / node("block", "body"),
   stats = stat * (T ";" * stats) ^ -1 / nodeSeq,
-  stat = block + call + assignStat + varStat + ifStat + whileStat + returnStat + printStat + space,
+  stat = block + call + assignStat + varStat + ifStat + whileStat + returnStat + printStat + exp + space,
   ifStat = Rw "if" * exp * block * (elseIfStat + elseStat) ^ -1 / node("if", "cond", "block", "otherwise"),
   elseIfStat = Rw "elseif" * exp * block * elseIfStat ^ 0 * elseStat ^ -1 / node("if", "cond", "block", "otherwise"),
   elseStat = Rw "else" * block,
@@ -147,7 +148,6 @@ local grammar = lpeg.P({
   returnStat = Rw "return" * exp / node("ret", "exp"),
   printStat = T "@" * exp / node("print", "exp"),
   varStat = Rw "var" * ID * (T "=" * exp) ^ -1 / node("local", "name", "init"),
-  block = T "{" * stats * T ";" ^ -1 * T "}" / node("block", "body"),
   exp = termL,
   termL = lpeg.Ct(termC * (opL * termC) ^ 0) / foldLogical,
   termC = lpeg.Ct(termA * (opC * termA) ^ 0) / foldBin,
