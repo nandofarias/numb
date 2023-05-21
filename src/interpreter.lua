@@ -99,14 +99,14 @@ function M.run(code, mem, stack, top)
         pc = pc + code[pc]
       end
       top = top - 1
-    elseif code[pc] == "jumpZP" then
+    elseif code[pc] == "jmpZP" then
       pc = pc + 1
       if stack[top] == 0 then
         pc = pc + code[pc]
       else
         top = top - 1
       end
-    elseif code[pc] == "jumpNZP" then
+    elseif code[pc] == "jmpNZP" then
       pc = pc + 1
       if stack[top] ~= 0 then
         pc = pc + code[pc]

@@ -3,6 +3,8 @@
         "vim",
         "hs",
         "it",
-        "describe"
+        "describe",
+        "spy",
+        "stub"
     ]
 }
