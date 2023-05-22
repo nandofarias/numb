@@ -1,6 +1,9 @@
 # Numb
 
-A small language to work with NUMBers 🔟. Numb is my project submission for the amazing Classpert course [Building a programming language](https://classpert.com/classpertx/courses/building-a-programming-language/cohort)
+A small language to work with NUMBers 🔟.
+
+Numb is my project submission for the amazing Classpert course [Building a programming language](https://classpert.com/classpertx/courses/building-a-programming-language/cohort)
+
 Naming things is harder than building a programming language (trust me), but I choose that name heavily inspired by one of my favorite songs of all time. https://www.youtube.com/watch?v=kXYiU_JCYtU.
 
 ## Installation
@@ -28,15 +31,22 @@ The examples/ folder has a lot of good examples of how to use/test the language.
 numb examples/factorial.nb
 ```
 
+Alternatively, you can just `cd src` and execute `lua main.lua < myprogram.nb`
+
 ## Development
 
 Numb has 3 principal modules:
 
+
 parser.lua -> which converts text to numb AST.
+
 compiler.lua -> which converts numb AST to stack machine instructions.
+
 interpreter.lua -> which read instructions and executes the program.
 
+
 For each module we have tests inside of the tests/ folder, tests were written using https://lunarmodules.github.io/busted/ test framework.
+
 You can install it using `luarocks install busted` or calling `make test`, which installs and run all test suite.
 
 ## Language Syntax
@@ -304,12 +314,6 @@ Example:
 ```numb
 var a = if 1 ? 10 : 2;
 ```
-
-
-
-* Detailed explanation of each feature/change
-* Examples of how they can be used
-* Any trade-offs or limitations you are aware of
 
 ## Future
 
