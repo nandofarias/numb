@@ -1,0 +1,23 @@
+function main {
+  var n = 0;
+
+  if n {
+    n = n + 1;
+  } elseif 1 {
+    n = n + 1;
+  } else {
+    n = n;
+  };
+
+  unless !n {
+    n = n + 1
+  };
+
+  n = if 1 ? n + 1 : n;
+
+  while n < 5 {
+    n = n + 1;
+  };
+
+  return n;
+}

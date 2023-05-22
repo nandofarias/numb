@@ -54,7 +54,7 @@ function M.parse(input)
   local scientific = (floating + hexadecimal + decimal) * lpeg.S("Ee") * decimal
   local numeral = (scientific + floating + hexadecimal + decimal) / tonumber / node("number", "val") * space
 
-  local reserved = { "var", "return", "if", "elseif", "else", "@", "while", "and", "or", "new", "function" }
+  local reserved = { "var", "return", "if", "elseif", "else", "unless", "@", "while", "and", "or", "new", "function" }
   local excluded = lpeg.P(false)
   for i = 1, #reserved do
     excluded = excluded + reserved[i]
@@ -112,7 +112,7 @@ function M.parse(input)
   local ifStat = lpeg.V("ifStat")
   local elseIfStat = lpeg.V("elseIfStat")
   local elseStat = lpeg.V("elseStat")
-  local ternary = lpeg.V("ternary")
+  local unlessStat = lpeg.V("unlessStat")
   local whileStat = lpeg.V("whileStat")
   local assignStat = lpeg.V("assignStat")
   local returnStat = lpeg.V("returnStat")
@@ -128,6 +128,7 @@ function M.parse(input)
   local termU = lpeg.V("termU")
   local termN = lpeg.V("termN")
   local factor = lpeg.V("factor")
+  local ternary = lpeg.V("ternary")
   local newArray = lpeg.V("newArray")
   local funcDec = lpeg.V("funcDec")
   local params = lpeg.V("params")
@@ -143,10 +144,11 @@ function M.parse(input)
     defaultParam = ID * T "=" * exp / node("defaultParam", "name", "exp"),
     block = T "{" * stats * T ";" ^ -1 * T "}" / node("block", "body"),
     stats = stat * (T ";" * stats) ^ -1 / nodeSeq,
-    stat = block + call + assignStat + varStat + ifStat + whileStat + returnStat + printStat + exp + space,
+    stat = block + call + assignStat + varStat + ifStat + unlessStat + whileStat + returnStat + printStat + exp + space,
     ifStat = Rw "if" * exp * block * (elseIfStat + elseStat) ^ -1 / node("if", "cond", "body", "otherwise"),
     elseIfStat = Rw "elseif" * exp * block * elseIfStat ^ 0 * elseStat ^ -1 / node("if", "cond", "body", "otherwise"),
     elseStat = Rw "else" * block,
+    unlessStat = Rw "unless" * exp * block / node("unless", "cond", "body"),
     whileStat = Rw "while" * exp * block / node("while", "cond", "block"),
     assignStat = lhs * T "=" * exp / node("assign", "lhs", "exp"),
     returnStat = Rw "return" * exp / node("ret", "exp"),

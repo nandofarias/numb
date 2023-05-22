@@ -112,6 +112,12 @@ local function run(code, mem, stack, top)
         pc = pc + code[pc]
       end
       top = top - 1
+    elseif code[pc] == "jmpNZ" then
+      pc = pc + 1
+      if stack[top] ~= 0 then
+        pc = pc + code[pc]
+      end
+      top = top - 1
     elseif code[pc] == "jmpZP" then
       pc = pc + 1
       if stack[top] == 0 then

@@ -468,6 +468,24 @@ describe("compile", function()
 
       assert.are.same({ "push", 1, "jmpZ", 4, "push", 2, "jmp", 2, "push", 3, "push", 0, "ret", 0 }, result)
     end)
+
+    it("should compile unless statements", function()
+      local result = compiler.compile({ {
+        block = {
+          body = {
+            tag = "unless",
+            cond = { tag = "number", val = 1 },
+            body = { tag = "block", body = { tag = "number", val = 2 } }
+          },
+          tag = "block"
+        },
+        name = "main",
+        params = {},
+        tag = "function"
+      } })
+
+      assert.are.same({ "push", 1, "jmpNZ", 2, "push", 2, "push", 0, "ret", 0 }, result)
+    end)
   end)
 
   describe("expressions", function()

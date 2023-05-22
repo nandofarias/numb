@@ -154,6 +154,15 @@ describe("run", function()
     assert.are.equal(3, falsy)
   end)
 
+  it("jmpNZ", function()
+    local truthy = interpreter.run({ "jmpNZ", 2, "push", 2, "push", 3, "ret", 0 }, {}, { 1 }, 1)
+    assert.are.equal(3, truthy)
+
+    local falsy = interpreter.run({ "jmpNZ", 2, "push", 2, "push", 3, "ret", 0 }, {}, { 0 }, 1)
+    assert.are.equal(2, falsy)
+  end)
+
+
   it("jmpZP", function()
     local truthy = interpreter.run({ "jmpZP", 2, "push", 3, "ret", 0 }, {}, { 1 }, 1)
     assert.are.equal(3, truthy)

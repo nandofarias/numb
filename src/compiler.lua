@@ -220,6 +220,11 @@ function M.compile(tree)
         self:codeStat(ast.otherwise)
         self:fixJmp2here(jmp2)
       end
+    elseif ast.tag == "unless" then
+      self:codeExp(ast.cond)
+      local jmp = self:codeJmpF("jmpNZ")
+      self:codeStat(ast.body)
+      self:fixJmp2here(jmp)
     elseif ast.tag == "while" then
       local ilabel = self:currentPosition()
       self:codeExp(ast.cond)

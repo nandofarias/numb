@@ -17,6 +17,7 @@ dependencies = {
 build = {
   type = "builtin",
   modules = {
+    setup = "src/setup.lua",
     compiler = "src/compiler.lua",
     interpreter = "src/interpreter.lua",
     main = "src/main.lua",

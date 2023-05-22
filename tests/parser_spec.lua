@@ -171,6 +171,7 @@ describe("parse", function()
 
       it("should parse if elseif else statements", function()
         local result = parser.parse([[ function foo { if (1) { 2 } elseif (3) { 4 } else { 5 } } ]])
+
         assert.are.same({
             tag = "if",
             cond = { tag = "number", val = 1 },
@@ -185,13 +186,25 @@ describe("parse", function()
           result[1].block.body)
       end)
 
-      it("should parse ternary statements", function()
+      it("should parse ternary", function()
         local result = parser.parse([[ function foo { if 1 ? 2 : 3 } ]])
+
         assert.are.same({
             tag = "if",
             cond = { tag = "number", val = 1 },
             body = { tag = "number", val = 2 },
             otherwise = { tag = "number", val = 3 }
+          },
+          result[1].block.body)
+      end)
+
+      it("should parse unless statements", function()
+        local result = parser.parse([[ function foo { unless 1 { 2 } } ]])
+
+        assert.are.same({
+            tag = "unless",
+            cond = { tag = "number", val = 1 },
+            body = { tag = "block", body = { tag = "number", val = 2 } },
           },
           result[1].block.body)
       end)
