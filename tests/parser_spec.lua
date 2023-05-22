@@ -439,3 +439,23 @@ describe("parse", function()
     end)
   end)
 end)
+
+it("should print comprehensive error messages", function()
+  stub(parser, "err")
+
+  local result = parser.parse([[
+  function foo {
+    var a = 1;
+    var b = 2;
+    return a $$ b;
+  }
+  ]])
+
+  assert.stub(parser.err).was_called_with([[
+Syntax error on line 4
+    var a = 1;
+    var b = 2;
+    return a $$ b;
+^^^^^^^^^^^^^^
+]])
+end)

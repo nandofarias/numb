@@ -1,0 +1,21 @@
+function odd ;
+function even(n) {
+  if n {
+    n = n - 1;
+    return odd()
+  } else {
+    return 1
+  }
+}
+function odd(n) {
+  if n {
+    n = n - 1;
+    return even()
+  } else {
+    return 0
+  }
+}
+function main () {
+  var n = 10;
+  return even(n)
+}
