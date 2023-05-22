@@ -438,7 +438,7 @@ describe("compile", function()
           body = {
             tag = "if",
             cond = { tag = "number", val = 1 },
-            block = { tag = "block", body = { tag = "number", val = 2 } }
+            body = { tag = "block", body = { tag = "number", val = 2 } }
           },
           tag = "block"
         },
@@ -456,7 +456,7 @@ describe("compile", function()
           body = {
             tag = "if",
             cond = { tag = "number", val = 1 },
-            block = { tag = "block", body = { tag = "number", val = 2 } },
+            body = { tag = "block", body = { tag = "number", val = 2 } },
             otherwise = { tag = "block", body = { tag = "number", val = 3 } }
           },
           tag = "block"

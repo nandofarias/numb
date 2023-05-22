@@ -154,7 +154,7 @@ describe("parse", function()
       it("should parse if statements", function()
         local result = parser.parse([[ function foo { if (1) { 2 } } ]])
         assert.are.same(
-          { tag = "if", cond = { tag = "number", val = 1 }, block = { tag = "block", body = { tag = "number", val = 2 } } },
+          { tag = "if", cond = { tag = "number", val = 1 }, body = { tag = "block", body = { tag = "number", val = 2 } } },
           result[1].block.body)
       end)
 
@@ -163,7 +163,7 @@ describe("parse", function()
         assert.are.same({
             tag = "if",
             cond = { tag = "number", val = 1 },
-            block = { tag = "block", body = { tag = "number", val = 2 } },
+            body = { tag = "block", body = { tag = "number", val = 2 } },
             otherwise = { tag = "block", body = { tag = "number", val = 3 } }
           },
           result[1].block.body)
@@ -174,13 +174,24 @@ describe("parse", function()
         assert.are.same({
             tag = "if",
             cond = { tag = "number", val = 1 },
-            block = { tag = "block", body = { tag = "number", val = 2 } },
+            body = { tag = "block", body = { tag = "number", val = 2 } },
             otherwise = {
               tag = "if",
               cond = { tag = "number", val = 3 },
-              block = { tag = "block", body = { tag = "number", val = 4 } },
+              body = { tag = "block", body = { tag = "number", val = 4 } },
               otherwise = { tag = "block", body = { tag = "number", val = 5 } }
             }
+          },
+          result[1].block.body)
+      end)
+
+      it("should parse ternary statements", function()
+        local result = parser.parse([[ function foo { if 1 ? 2 : 3 } ]])
+        assert.are.same({
+            tag = "if",
+            cond = { tag = "number", val = 1 },
+            body = { tag = "number", val = 2 },
+            otherwise = { tag = "number", val = 3 }
           },
           result[1].block.body)
       end)
@@ -443,7 +454,7 @@ end)
 it("should print comprehensive error messages", function()
   stub(parser, "err")
 
-  local result = parser.parse([[
+  parser.parse([[
   function foo {
     var a = 1;
     var b = 2;
@@ -453,9 +464,9 @@ it("should print comprehensive error messages", function()
 
   assert.stub(parser.err).was_called_with([[
 Syntax error on line 4
+
     var a = 1;
     var b = 2;
     return a $$ b;
-^^^^^^^^^^^^^^
-]])
+^^^^^^^^^^^^^^]])
 end)

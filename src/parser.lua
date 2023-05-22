@@ -112,6 +112,7 @@ function M.parse(input)
   local ifStat = lpeg.V("ifStat")
   local elseIfStat = lpeg.V("elseIfStat")
   local elseStat = lpeg.V("elseStat")
+  local ternary = lpeg.V("ternary")
   local whileStat = lpeg.V("whileStat")
   local assignStat = lpeg.V("assignStat")
   local returnStat = lpeg.V("returnStat")
@@ -143,8 +144,8 @@ function M.parse(input)
     block = T "{" * stats * T ";" ^ -1 * T "}" / node("block", "body"),
     stats = stat * (T ";" * stats) ^ -1 / nodeSeq,
     stat = block + call + assignStat + varStat + ifStat + whileStat + returnStat + printStat + exp + space,
-    ifStat = Rw "if" * exp * block * (elseIfStat + elseStat) ^ -1 / node("if", "cond", "block", "otherwise"),
-    elseIfStat = Rw "elseif" * exp * block * elseIfStat ^ 0 * elseStat ^ -1 / node("if", "cond", "block", "otherwise"),
+    ifStat = Rw "if" * exp * block * (elseIfStat + elseStat) ^ -1 / node("if", "cond", "body", "otherwise"),
+    elseIfStat = Rw "elseif" * exp * block * elseIfStat ^ 0 * elseStat ^ -1 / node("if", "cond", "body", "otherwise"),
     elseStat = Rw "else" * block,
     whileStat = Rw "while" * exp * block / node("while", "cond", "block"),
     assignStat = lhs * T "=" * exp / node("assign", "lhs", "exp"),
@@ -159,10 +160,11 @@ function M.parse(input)
     termU = opU * termE / node("unary", "sign", "exp") + termE,
     termE = termN * (opE * termE) ^ -1 / nodeExp,
     termN = opN * termN / node("not", "exp") + factor,
-    factor = newArray + numeral + T "(" * exp * T ")" + call + lhs,
+    factor = newArray + numeral + T "(" * exp * T ")" + call + lhs + ternary,
     newArray = Rw "new" * lpeg.V("arraySize"),
     arraySize = T "[" * exp * T "]" * lpeg.V("arraySize") ^ -1 / node("new", "size", "init"),
     lhs = lpeg.Ct(var * (T "[" * exp * T "]") ^ 0) / foldIndex,
+    ternary = Rw "if" * exp * T "?" * stat * T ":" * stat / node("if", "cond", "body", "otherwise"),
     call = ID * T "(" * args * T ")" / node("call", "fname", "args"),
     args = lpeg.Ct((exp * (T "," * exp) ^ 0) ^ -1),
     ID = (lpeg.C(alpha * alnum ^ 0) - excluded) * space,
@@ -178,11 +180,11 @@ function M.parse(input)
       table.insert(lines, s .. "\n")
     end
 
-    local error = "Syntax error on line " .. currentline .. "\n"
+    local error = "Syntax error on line " .. currentline .. "\n\n"
     for i = currentline - 2, currentline do
       error = error .. (lines[i] or "")
     end
-    error = error .. string.rep("^", maxmatch - currentlinepos + 1) .. "\n"
+    error = error .. string.rep("^", maxmatch - currentlinepos + 1)
     M.err(error)
   end
 

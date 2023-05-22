@@ -91,6 +91,8 @@ function M.compile(tree)
       self:addCode(ast.val)
     elseif ast.tag == "call" then
       self:codeCall(ast)
+    elseif ast.tag == "if" then
+      self:codeStat(ast)
     elseif ast.tag == "variable" then
       local idx = self:findLocal(ast.var)
       if idx then
@@ -209,7 +211,7 @@ function M.compile(tree)
     elseif ast.tag == "if" then
       self:codeExp(ast.cond)
       local jmp = self:codeJmpF("jmpZ")
-      self:codeStat(ast.block)
+      self:codeStat(ast.body)
       if ast.otherwise == nil then
         self:fixJmp2here(jmp)
       else
