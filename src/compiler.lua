@@ -258,9 +258,10 @@ function M.compile(tree)
   end
 
   function Compiler:codeBlock(ast)
-    self.blockstart = #self.locals
+    local count = #self.locals
+    self.blockstart = count
     self:codeStat(ast.body)
-    local diff = #self.locals - self.blockstart
+    local diff = #self.locals - count
     if diff > 0 then
       for _ = 1, diff do
         table.remove(self.locals)

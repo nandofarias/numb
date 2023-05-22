@@ -265,7 +265,7 @@ describe("compile", function()
             tag = "function"
           } })
 
-      assert.are.same({ "push", 2, "push", 2, "pop", 1, "push", 0, "ret", 1 }, result)
+      assert.are.same({ "push", 2, "push", 2, "pop", 1, "pop", 1, "push", 0, "ret", 0 }, result)
     end)
 
     it("should compile print statements", function()
