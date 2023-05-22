@@ -8,5 +8,4 @@ USAGE
   exit 1
 fi
 
-export LUA_INIT="@src/setup.lua"
-lua src/main.lua < "$1"
+lua $(dirname $0)/../src/main.lua < "$1"

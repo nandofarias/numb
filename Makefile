@@ -1,4 +1,3 @@
-build:
-	luarocks build
-test: build
+test:
+	luarocks install busted
 	busted tests
